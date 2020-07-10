@@ -1,0 +1,13 @@
+Package: kangguru
+Title: Aplikasi Ujian Sekolah
+Version: 0.0.0.9000
+Authors@R: person('Aep', 'Hidayatuloh', email = 'aephidayatuloh.mail@gmail.com', role = c('cre', 'aut'))
+Description: Sistem ujian berbasis jaringan.
+License: MIT + file LICENSE
+Imports: 
+    config,
+    golem,
+    shiny
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.1.1
