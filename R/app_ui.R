@@ -7,34 +7,12 @@
 #' @import RPostgreSQL
 #' @noRd
 app_ui <- function(request) {
-  items <- tagList(
-    f7TimelineItem(NULL,
-                   date = "01 Des",
-                   card = FALSE,
-                   time = "12:30 - 14:00",
-                   title = "Matematika",
-                   side = "left"
-    ),
-    f7TimelineItem(
-      f7Button("mulaiujian", "Mulai Ujian"),
-      date = "02 Dec",
-      card = TRUE,
-      time = "13:00 - 14:30",
-      title = "Bahasa Indonesia"
-    ),
-    f7TimelineItem(NULL,
-                   date = "02 Dec",
-                   card = TRUE,
-                   time = "15:00 - 16:30",
-                   title = "Farmakognosi"
-    ),
-    f7TimelineItem(NULL,
-                   date = "03 Dec",
-                   card = FALSE,
-                   time = "13:00 - 15:45",
-                   title = "Kimia"
-    )
-  )
+  jadwal_dt <- data.frame(tanggal = c("2020-08-10", "2020-08-11", "2020-08-11", "2020-08-12"),
+                          waktu_mulai = c("12:30", "03:00", "03:30", "08:00"),
+                          waktu_selesai = c("14:00", "03:30", "05:00", "09:00"),
+                          mapel = c("bindo", "math", "fis", "kim"))
+  
+  
   
   tagList(
     # Leave this function for adding external resources
@@ -55,7 +33,7 @@ app_ui <- function(request) {
              ),
              div(id = "jadwal", 
                  h1("Jadwal Ujian", style="text-align: center;"),
-                 f7Timeline(calendar = FALSE, items)
+                 f7Timeline(calendar = FALSE, list_to_jadwal(jadwal_dt))
              ),
              uiOutput("uisoal")
            )
@@ -87,6 +65,7 @@ golem_add_external_resources <- function(){
     ),
     # Add here other external resources
     # for example, you can add shinyalert::useShinyalert() 
+    withMathJax(),
     useShinyjs()
   )
 }

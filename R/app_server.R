@@ -5,36 +5,12 @@
 #' @import shiny
 #' @import shinyMobile
 #' @importFrom shinyjs hide
-#' @importFrom stats rnorm
-#' @importFrom safer decrypt_string
-#' @importFrom jsonlite fromJSON
 #' @noRd
 app_server <- function( input, output, session ) {
   # List the first level callModules here
   
-  expired <- decrypt_string(fromJSON(app_sys("app/assets/sid.json")))
+  f7Dialog(title = "Login", inputId = "login", text = NULL, type = "login", session)
   
-  if(difftime(as.Date(expired), Sys.Date(), units = "days") <= 3){
-    f7Notif(closeButton = TRUE, title = "Notifikasi", titleRightText = "Now",
-            text = sprintf("Masa aktif %s hari", as.numeric(difftime(as.Date(expired), Sys.Date(), units = "days"))))
-  }
-  
-  observe({
-    if(Sys.Date() > as.Date(expired)){
-      f7Dialog(title = "Notifikasi", text = "Lisensi kadaluarsa", type = "alert", session)
-    } else {
-      f7Dialog(title = "Login", inputId = "login", text = NULL, type = "login", session)
-    }
-  })
-  
-  observeEvent(input$login, {
-    # req(input$login)
-    if(input$login[1]== "" | input$login[2] == ""){
-      return(NULL)
-    } else {
-      output$plot1 <- renderPlot({plot(rnorm(100), rnorm(100))})
-    }
-  })
   
   observeEvent(input$mulaiujian, {
     hide(id = "jadwal")
@@ -42,16 +18,23 @@ app_server <- function( input, output, session ) {
       tagList(
         f7Swiper(id = "soal", slidePerView = 1, 
                  f7Slide(
-                   f7Card(title = "Soal 1", 
-                          "sfvdskbkdgkdfgjfbkdbdj", 
+                   col_12(
+                          h5("Soal 1", style="margin-bottom: 0;padding-left: 5px;padding-right: 5px;"),
+                          withMathJax(helpText(
+                            "Quiz your audience with this easy-to-use quiz template by 123FormBuilder. Customize it with simple the simple drag-and-drop interface, type in your questions, provide multiple choice answers with images, and many more. Show the quiz score on completion, trigger partial answers, and send auto-replies by email. With 123FormBuilder, quizzing online is as easy as 1-2-3!"
+                            )),
                           f7Radio(inputId = "jawaban1", label = NULL, choices = LETTERS[1:5])
-                   )
+                   ), 
+                   br()
                  ),
                  f7Slide(
-                   f7Card(title = "Soal 2", 
-                          "sfvdskbkdgkdfgjfbkdbdj", 
-                          f7Radio(inputId = "jawaban2", label = NULL, choices = LETTERS[1:5])
-                   )
+                   col_12(
+                     h5("Soal 2", style="margin-bottom: 0;padding-left: 5px;padding-right: 5px;"),
+                     withMathJax(helpText(
+                       "Quiz your audience with this easy-to-use quiz template by \\(f(x) = x^2 + 2x + 1\\). Customize it with simple the simple drag-and-drop interface, type in your questions, provide multiple choice answers with images, and many more. Show the quiz score on completion, trigger partial answers, and send auto-replies by email. With 123FormBuilder, quizzing online is as easy as 1-2-3!")),
+                     f7Radio(inputId = "jawaban2", label = NULL, choices = LETTERS[1:5])
+                     ), 
+                   br()
                  )
         ),
         f7Segment(container = "segment", rounded = TRUE, 

@@ -65,6 +65,45 @@ list_to_p <- function(list, class = NULL){
   
 }
 
+#' Convert jadwal to timeline jadwal UI
+#' 
+#' @noRd
+#' @param jadwal_dt dataframe jadwal ujian
+#' @importFrom shiny tagList
+#' @importFrom shinyMobile f7TimelineItem f7Button
+#'  
+list_to_jadwal <- function(jadwal_dt){
+  jadwal_dt <- subset(jadwal_dt, as.Date(tanggal) == Sys.Date())
+  jadwal_dt$waktu_mulai <- as.POSIXct(paste0(jadwal_dt$tanggal, " ", jadwal_dt$waktu_mulai,":00 +07"))
+  jadwal_dt$waktu_selesai <- as.POSIXct(paste0(jadwal_dt$tanggal, " ", jadwal_dt$waktu_selesai,":00 +07"))
+  jadwal_dt$tanggal <- as.Date(jadwal_dt$tanggal)
+  tagList(
+    lapply(
+      1:nrow(jadwal_dt),
+      function(x){
+        if(jadwal_dt$waktu_mulai[x] <= Sys.time() & Sys.time() <= jadwal_dt$waktu_selesai[x]){
+          f7TimelineItem(f7Button("mulaiujian", "Mulai Ujian"),
+                         date = format(jadwal_dt$tanggal[x], "%d %b"),
+                         card = TRUE,
+                         time = paste0(format(jadwal_dt$waktu_mulai[x], "%H:%M"), " - ", format(jadwal_dt$waktu_selesai[x], "%H:%M")),
+                         title = jadwal_dt$mapel[x]
+          )
+        } else {
+          f7TimelineItem(NULL,
+                         date = format(jadwal_dt$tanggal[x], "%d %b"),
+                         card = FALSE,
+                         time = paste0(format(jadwal_dt$waktu_mulai[x], "%H:%M"), " - ", format(jadwal_dt$waktu_selesai[x], "%H:%M")),
+                         title = jadwal_dt$mapel[x],
+                         side = "left"
+          )
+        }
+        
+      }
+    )
+  )
+}
+
+
 #' @importFrom htmltools tags tagAppendAttributes tagList
 named_to_li <- function(list, class = NULL){
   if(is.null(class)){
