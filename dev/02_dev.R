@@ -20,7 +20,7 @@ usethis::use_package( "shinyjs" )
 usethis::use_package( "shinyalert" )
 usethis::use_package( "shinyWidgets" )
 usethis::use_package( "waiter" )
-usethis::use_package( "RPostgreSQL" )
+usethis::use_package( "RPostgres" )
 usethis::use_package( "data.table" )
 
 
